@@ -11,22 +11,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class Default404Processor implements RequestProcessor{
-    private static final Logger LOGGER = LogManager.getLogger(Default404Processor.class);
+public class Default405Processor implements RequestProcessor{
+    private static final Logger LOGGER = LogManager.getLogger(Default405Processor.class);
     @Override
     public void execute(HttpRequest request, OutputStream output) throws IOException {
-        ErrorDto errorDto = new ErrorDto(
-                ((BadRequestException)request.getErrorCause()).getCode(),
-                ((BadRequestException) request.getErrorCause()).getDescription()
-        );
-        Gson gson = new Gson();
-        String jsonError = gson.toJson(errorDto);
         String response = "" +
-                "HTTP/1.1 404 Page Not Found\r\n" +
-                "Content-Type: application/json\r\n" +
+                "HTTP/1.1 405 Method Not Allowed\r\n" +
+                "Connect-Type: text/html\r\n" +
                 "\r\n" +
-                jsonError;
+                "<html><body><h1>Method Not Allowed...</h1></body></html>";
         output.write(response.getBytes(StandardCharsets.UTF_8));
-        LOGGER.error(errorDto.getDescription());
+        LOGGER.error("Method Not Allowed...");
     }
 }

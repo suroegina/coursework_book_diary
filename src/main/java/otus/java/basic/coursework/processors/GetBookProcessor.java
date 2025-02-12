@@ -30,7 +30,7 @@ public class GetBookProcessor implements RequestProcessor{
             Gson gson = new Gson();
 
             if (request.containsParameter("id")) {
-                Long id = Long.parseLong(request.getParemeter("id"));
+                Long id = Long.parseLong(request.getParameter("id"));
                 LOGGER.info("ИД = " + id);
                 Book book = bookService.getBookById(id);
                 jsonResult = gson.toJson(book);

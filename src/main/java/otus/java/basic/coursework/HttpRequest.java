@@ -11,7 +11,7 @@ public class HttpRequest {
     private String rawRequest;
     private HttpMethod method;
     private String uri;
-    private Map<String, String> paremetres;
+    private Map<String, String> parametres;
     private Map<String, String> headers;
     private String body;
 
@@ -38,8 +38,8 @@ public class HttpRequest {
         return uri;
     }
 
-    public String getParemeter(String key) {
-        return paremetres.get(key);
+    public String getParameter(String key) {
+        return parametres.get(key);
     }
 
     public String getBody() {
@@ -47,12 +47,12 @@ public class HttpRequest {
     }
 
     public boolean containsParameter(String key) {
-        return paremetres.containsKey(key);
+        return parametres.containsKey(key);
     }
 
     private void parse() {
         try {
-            this.paremetres = new HashMap<>();
+            this.parametres = new HashMap<>();
             this.headers = new HashMap<>();
             int startIndex = rawRequest.indexOf(' ');
             LOGGER.debug("startIndex = " + startIndex);
@@ -69,7 +69,7 @@ public class HttpRequest {
                     String[] keyValue = o.split("=");
                     LOGGER.debug("keyValue[0] = " + keyValue[0]);
                     LOGGER.debug("keyValue[1] = " + keyValue[1]);
-                    this.paremetres.put(keyValue[0], keyValue[1]);
+                    this.parametres.put(keyValue[0], keyValue[1]);
                 }
             }
             rawRequest.lines()

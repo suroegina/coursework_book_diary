@@ -28,7 +28,7 @@ public class DeleteBookProcessor implements RequestProcessor{
             String jsonResult = null;
             Gson gson = new Gson();
             if (request.containsParameter("id")) {
-                Long id = Long.parseLong(request.getParemeter("id"));
+                Long id = Long.parseLong(request.getParameter("id"));
                 bookService.deleteBookById(id);
                 List<Book> books = bookService.getAllBooks();
                 jsonResult = gson.toJson(books);
