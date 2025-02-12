@@ -3,6 +3,9 @@ package otus.java.basic.coursework;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.Servlet;
+import javax.servlet.http.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,12 +57,17 @@ public class HttpRequest {
         try {
             this.parametres = new HashMap<>();
             this.headers = new HashMap<>();
-            int startIndex = rawRequest.indexOf(' ');
-            LOGGER.debug("startIndex = " + startIndex);
-            int endIndex = rawRequest.indexOf(' ', startIndex + 1);
-            LOGGER.debug("endIndex = " + endIndex);
-            this.method = HttpMethod.valueOf(rawRequest.substring(0, startIndex));
-            this.uri = rawRequest.substring(startIndex + 1, endIndex);
+            LOGGER.debug("rawRequest = " + rawRequest);
+//            int startIndex = rawRequest.indexOf(' ');
+//            LOGGER.debug("startIndex = " + startIndex);
+//            int endIndex = rawRequest.indexOf(' ', startIndex + 1);
+//            LOGGER.debug("endIndex = " + endIndex);
+//            this.method = HttpMethod.valueOf(rawRequest.substring(0, startIndex));
+//            this.uri = rawRequest.substring(startIndex + 1, endIndex);
+            String[] part = rawRequest.split(" ",1);
+            this.method = HttpMethod.valueOf(part[0]);
+            this.uri = part[1];
+
             if (this.uri.contains("?")) {
                 String[] tokens = uri.split("[?]");
                 LOGGER.debug("tokens[0] = " + tokens[0]);
