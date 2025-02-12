@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  book_diary_db:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=book_diary_db
