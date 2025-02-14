@@ -1,6 +1,5 @@
 package otus.java.basic.coursework.processors;
 
-import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import otus.java.basic.coursework.HttpRequest;
@@ -26,19 +25,82 @@ public class GetBookProcessor implements RequestProcessor{
     @Override
     public void execute(HttpRequest request, OutputStream output) throws IOException {
         try {
-            String jsonResult = null;
-            Gson gson = new Gson();
+            String Result = "";
+            //Gson gson = new Gson();
 
             if (request.containsParameter("id")) {
                 Long id = Long.parseLong(request.getParameter("id"));
                 LOGGER.info("ИД = " + id);
                 Book book = bookService.getBookById(id);
-                jsonResult = gson.toJson(book);
+                //Result = gson.toJson(book);
+                Result = "<!DOCTYPE html>\n" +
+                        "<html lang=\"en\"\n" +
+                        "<head>\n" +
+                        "<meta charset=\"UTF-8\">" +
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                        "<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">" +
+                        "<title>Books</title>" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<h1>Книги</h1>\n" +
+                        "<table>" +
+                        "<thread>" +
+                        "<tr>" +
+                        "                        <th data-title=\"Название\">Название</td>\n" +
+                        "                        <th data-title=\"Автор\">Автор</td>\n" +
+                        "                        <th data-title=\"Описание\">Описание</td>" +
+                        "</tr>"+
+                        "</thread>" +
+                        "<tbody>" +
+                        "<tr>" +
+                        "                        <td data-title=\"Название\">" + book.getTitle() + "</td>\n" +
+                        "                        <td data-title=\"Автор\">" + book.getAuthor() + "</td>\n" +
+                        "                        <td data-title=\"Описание\">" + book.getDescription() + "</td>" +
+                        "</tr>" +
+                        "</tbody>" +
+                        "</table>" +
+                        "</h2>\n" +
+                        "</body>\n" +
+                        "</html>";
+
                 LOGGER.info("Получение книги по ИД - ОК");
             } else {
                 List<Book> books = bookService.getAllBooks();
                 LOGGER.debug("books: " + books.toString());
-                jsonResult = gson.toJson(books);
+                //jsonResult = gson.toJson(books);
+                String strBooks = "";
+                for (Book b : books) {
+                    strBooks = strBooks +
+                            "<tr>" +
+                            "                        <td data-title=\"Название\">" + b.getTitle() + "</td>\n" +
+                            "                        <td data-title=\"Автор\">" + b.getAuthor() + "</td>\n" +
+                            "                        <td data-title=\"Описание\">" + b.getDescription() + "</td>" +
+                            "</tr>";
+                }
+                Result = "<!DOCTYPE html>\n" +
+                        "<html lang=\"en\"\n" +
+                        "<head>\n" +
+                        "<meta charset=\"UTF-8\">" +
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                        "<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">" +
+                        "<title>Document</title>" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<h1>Книги</h1>\n" +
+                        "<table>" +
+                        "<thread>" +
+                        "<tr>" +
+                        "                        <th data-title=\"Название\">Название</td>\n" +
+                        "                        <th data-title=\"Автор\">Автор</td>\n" +
+                        "                        <th data-title=\"Описание\">Описание</td>" +
+                        "</tr>"+
+                        "</thread>" +
+                        "<tbody>" +
+                        strBooks +
+                        "</tbody>" +
+                        "</h2>\n" +
+                        "</body>\n" +
+                        "</html>";
                 LOGGER.info("Получение всех книг - ОК");
             }
 
@@ -46,7 +108,7 @@ public class GetBookProcessor implements RequestProcessor{
                     "HTTP/1.1 200 OK\r\n" +
                     "Connect-Type: application/json\r\n" +
                     "\r\n" +
-                    jsonResult;
+                    Result;
 
             output.write(response.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchElementException e) {

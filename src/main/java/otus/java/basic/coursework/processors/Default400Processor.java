@@ -20,12 +20,13 @@ public class Default400Processor implements RequestProcessor {
                 ((BadRequestException) request.getErrorCause()).getDescription()
         );
         Gson gson = new Gson();
+        ErrorTemplate errorTemplate = new ErrorTemplate();
         String jsonError = gson.toJson(errorDto);
         String response = "" +
                 "HTTP/1.1 400 Bad Request\r\n" +
                 "Content-Type: application/json\r\n" +
                 "\r\n" +
-                jsonError;
+                errorTemplate.generateErrorResp(400, "Bad Request", jsonError);
         output.write(response.getBytes(StandardCharsets.UTF_8));
         LOGGER.error(errorDto.getDescription());
     }

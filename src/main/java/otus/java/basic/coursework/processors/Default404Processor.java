@@ -21,11 +21,12 @@ public class Default404Processor implements RequestProcessor{
         );
         Gson gson = new Gson();
         String jsonError = gson.toJson(errorDto);
+        ErrorTemplate errorTemplate = new ErrorTemplate();
         String response = "" +
                 "HTTP/1.1 404 Page Not Found\r\n" +
                 "Content-Type: application/json\r\n" +
                 "\r\n" +
-                jsonError;
+                errorTemplate.generateErrorResp(404, "Page Not Found", jsonError);
         output.write(response.getBytes(StandardCharsets.UTF_8));
         LOGGER.error(errorDto.getDescription());
     }

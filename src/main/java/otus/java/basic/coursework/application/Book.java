@@ -46,6 +46,7 @@ public class Book {
     }
 
     public String getTitle() {
+        if (title == null) return "";
         return title;
     }
 
@@ -78,6 +79,7 @@ public class Book {
     }
 
     public String getDescription() {
+        if (description == null) return "";
         return description;
     }
 
