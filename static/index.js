@@ -41,19 +41,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
                 });
     }
 
-    // $scope.tryToGetFile = function () {
-    //     $http({
-    //         url: contextPath + '/123.png',
-    //         cache: true,
-    //         method: "GET"
-    //     }).then(function (response) {
-    //         console.log('ok')
-    //     });
-    // };
-
     $scope.fillTable();
 
-    // $scope.tryToGetFile();
-    // $scope.tryToGetFile();
-    // $scope.tryToGetFile();
 });
