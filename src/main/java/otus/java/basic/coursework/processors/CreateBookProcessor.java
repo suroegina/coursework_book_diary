@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import otus.java.basic.coursework.HttpRequest;
 import otus.java.basic.coursework.application.Book;
 import otus.java.basic.coursework.application.BookService;
+import otus.java.basic.coursework.application.Storage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,11 +29,14 @@ public class CreateBookProcessor implements RequestProcessor{
         LOGGER.debug("New BOOK: " + newBook.toString());
         bookService.createNewBook(newBook);
         LOGGER.info("Создание книги - ОК: " + newBook.toString());
-        String response = "" +
-                "HTTP/1.1 201 Created\r\n" +
-                "Connect-Type: text/html\r\n" +
-                "\r\n" +
-                "<html><body><h1>CREATE BOOK</h1></body></html>";
+        Storage.save(newBook);
+        String jsonOutItem = gson.toJson(newBook);
+
+        String response = "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: application/json\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Access-Control-Allow-Origin: *\r\n" +
+                "\r\n" + jsonOutItem;
         output.write(response.getBytes(StandardCharsets.UTF_8));
     }
 

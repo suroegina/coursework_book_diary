@@ -81,7 +81,7 @@ public class BookServiceJDBCImpl implements BookServiceJDBC{
             if (status_id == 0) {
                 preparedStatement.setInt(8, 3);
             } else {
-                preparedStatement.setInt(7, status_id);
+                preparedStatement.setInt(8, status_id);
             }
             preparedStatement.setInt(9, rating);
             preparedStatement.setString(10, notes);

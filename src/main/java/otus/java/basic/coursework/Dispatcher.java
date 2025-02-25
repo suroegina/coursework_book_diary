@@ -7,6 +7,8 @@ import otus.java.basic.coursework.processors.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +19,7 @@ public class Dispatcher {
 
     private Map<String, RequestProcessor> router;
     private ExceptionProcessor exceptionProcessor;
+    private RequestProcessor staticResourcesProcessor;
 
 
     public Dispatcher() {
@@ -28,11 +31,16 @@ public class Dispatcher {
         this.router.put("DELETE /book", new DeleteBookProcessor(bookService));
         this.router.put("PUT /book", new UpdateBookProcessor(bookService));
         this.exceptionProcessor = new ExceptionProcessor();
+        this.staticResourcesProcessor = new DefaultStaticResourcesProcessor();
 
     }
 
     public void execute(HttpRequest request, OutputStream output) throws IOException {
         try {
+            if (Files.exists(Paths.get("static/", request.getUri().substring(1)))) {
+                staticResourcesProcessor.execute(request, output);
+                return;
+            }
             if (!router.containsKey(request.getRoutingKey())) {
                 Set<String> setKeys = router.keySet();
                 for(String k: setKeys){

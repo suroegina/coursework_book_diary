@@ -16,7 +16,7 @@ public class BookService {
     public BookService() {
         try {
             this.books = bookServiceJDBC.getAll();
-            LOGGER.debug("bookServiceJDBC.getAll() = " + this.books);
+            LOGGER.debug("bookServiceJDBC.getAll() = " + this.books.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

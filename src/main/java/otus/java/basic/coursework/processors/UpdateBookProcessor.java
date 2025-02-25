@@ -6,10 +6,14 @@ import org.apache.logging.log4j.Logger;
 import otus.java.basic.coursework.HttpRequest;
 import otus.java.basic.coursework.application.Book;
 import otus.java.basic.coursework.application.BookService;
+import otus.java.basic.coursework.application.Storage;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
 public class UpdateBookProcessor implements RequestProcessor{
@@ -26,25 +30,20 @@ public class UpdateBookProcessor implements RequestProcessor{
         try {
             String jsonResult = null;
             Gson gson = new Gson();
-            Book newBook = gson.fromJson(request.getBody(), Book.class);
-            Long newId = newBook.getId();
-            try {
-                Book book = bookService.getBookById(newId);
-                bookService.updateBook(newBook);
-                LOGGER.info("Обновление заголовка книги - ОК: " + newBook.toString());
-            } catch (NoSuchElementException e) {
-                bookService.createNewBook(newBook);
-                LOGGER.info("Обновление книги - Книги в списке нет. Создание: " + newBook.toString());
-            }
+            Book updateBook = gson.fromJson(request.getBody(), Book.class);
+            Long newId = updateBook.getId();
+            LOGGER.info("Update Book ID  = " + newId);
+            bookService.updateBook(updateBook);
+            LOGGER.info("Обновление заголовка книги - ОК: " + updateBook.toString());
+            jsonResult = gson.toJson(updateBook);
+            Storage.update(updateBook);
 
-            jsonResult = gson.toJson(newBook);
+            String response = "HTTP/1.1 200 OK\r\n" +
+                    "Cache-Control: no-cache, no-store, must-revalidate\r\n" +
+                    jsonResult +
+                    "\r\n";
+            output.write(response.getBytes());
 
-            String response = "" +
-                    "HTTP/1.1 200 OK\r\n" +
-                    "Connect-Type: application/json\r\n" +
-                    "\r\n" +
-                    jsonResult;
-            output.write(response.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchElementException e) {
             String response = "" +
                     "HTTP/1.1 200 OK\r\n" +

@@ -118,4 +118,13 @@ public class Book {
     public void setNote(String note) {
         this.note = note;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }
